@@ -1,0 +1,137 @@
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect 4</title>
+    <style>
+        body {
+            background-color: #111;
+            color: #eee;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .sidebar {
+            vertical-align: top;
+            float: right;
+            padding: 10px;
+            padding-right: 20px;
+            border: 2px #777 solid;
+            margin:0;
+        }
+
+        .me {
+            text-decoration: wavy underline;
+        }
+
+        .queue button {
+            display: block;
+        }
+    
+        .board {
+            width: 600px;
+            background-color: #333;
+            display: inline-table;
+            border: 5px solid black;
+            table-layout: fixed;
+            resize: horizontal;
+            overflow: hidden;
+            padding-right: 5px;
+        }
+
+        .column {
+            display: table-cell;
+            padding: 5px;
+        }
+
+        .column div {
+            background-color: #777;
+            border: black 2px solid;
+            width: 100%;
+            padding-top: 100%;
+            position: relative;
+            border-radius: 100%;
+            margin: 10px 0;
+        }
+    
+    </style>
+
+</head>
+<body>
+
+    <div class="board">
+        <div class="column" id="c0">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div class="column" id="c1">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div class="column" id="c2">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div class="column" id="c3">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div class="column" id="c4">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div class="column" id="c5">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div class="column" id="c6">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="sidebar">
+        <div id="sideinfo">
+            <form id="nameform" onsubmit="submitName(event)">
+                <h3>Join the queue</h3>
+                Name:
+                <input type="text" name="name" id="name" placeholder="Name">
+                <br><br>
+                <input type="submit" value="Join">
+                <br><br>
+            </form>
+        </div>
+        <div style="overflow:auto" id="message"></div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="main.js"></script>
+
+</body>
+</html>
