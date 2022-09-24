@@ -2,16 +2,21 @@
     require "lib.php";
 
     if(isset($_POST['name']) && isset($_POST['key'])) {
-        if(!authenticate($_POST['name'], $_POST['key'])) {
+        $name = $_POST['name'];
+
+        if(!authenticate($name, $_POST['key'])) {
             echo "badkey";
             die;
-        }
-
-        $poepie = "Kleine kat hihi";
+        }        
         
-
         $timeNow = time();
-        databaseEdit("times.txt", $_POST['name'], $timeNow);
+        if(isset($_POST['leave'])) {
+            if(databaseContains("players.txt", $name)) {
+                stopGame();
+            }
+            removeFromAll($name, false);
+        }
+        else databaseEdit("times.txt", $name, $timeNow);
 
         if($timeNow - intval(file_get_contents("lastcheck.txt")) > 10) {
             file_put_contents("lastcheck.txt", $timeNow, LOCK_EX);
@@ -22,18 +27,27 @@
             $tok = strtok($file, ":");
             while($tok !== false) {
                 $timeThen = intval(substr($tok, strpos($tok, " ") + 1));
-                if($timeNow - $timeThen > 20) {
+                if($timeNow - $timeThen > 10) {
                     $timedOut[$index++] = substr($tok, 1, strpos($tok, " ") - 1);
                 }
                 $tok = strtok(":");
             } 
             
             foreach ($timedOut as $name) {
-                databaseRemove("keys.txt", $name);
-                databaseRemove("queue.txt", $name);
-                databaseRemove("times.txt", $name);
+                removeFromAll($name);
             }
         }
+    }
+
+    function removeFromAll($name, $waiting = true) {
+        databaseRemove("keys.txt", $name);
+        databaseRemove("times.txt", $name);
+        if($waiting) databaseRemove("queue.txt", $name);
+    }
+
+    function stopGame() {
+        file_put_contents("data.txt", "000", LOCK_EX);
+        file_put_contents("players.txt", "", LOCK_EX);
     }
 
 ?>

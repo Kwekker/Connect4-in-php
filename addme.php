@@ -5,7 +5,7 @@
         $name = $_POST['name'];
 
         if(!ctype_alnum($name) || strlen($name) < 3) {
-            echo "badname";
+            echo "cringe";
             die;
         }
 

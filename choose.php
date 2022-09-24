@@ -2,7 +2,7 @@
     require "lib.php";
 
     if(isset($_POST['test'])) {
-        echo databaseRead("board.txt", "papa", 3);
+        echo databaseRead("board.dat", "papa", 3);
     }
 
     if(isset($_POST['can']) && isset($_POST['name'])) {        
@@ -32,16 +32,23 @@
             die;
         }
 
+        //Remove these players from queue.txt and add them to players.txt
         databaseInsert("players.txt", $name, "0");
         databaseInsert("players.txt", $opponent, "1");
-        file_put_contents("data.txt", "10null", LOCK_EX);
+        file_put_contents("data.txt", "11$name", LOCK_EX);
         databaseRemove("queue.txt", $name);
         databaseRemove("queue.txt", $opponent);
+
+        //Start the game by resetting the board
+        //Pretty sure this is the best way of doing this (it's 7 * 6 = 42 0's)
+        $board = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+        file_put_contents("board.dat", $board, LOCK_EX);
+
         echo "yes";
     }
 
     function canChoose($name) {
-        return substr(file_get_contents("queue.txt"), 0, strlen($name) + 1) == "\n$name" && file_get_contents("data.txt")[0] == '0';
+        return (substr(file_get_contents("queue.txt"), 0, (strlen($name) + 1)) == "\n$name") && (file_get_contents("data.txt")[0] == '0');
     }
 
 ?>

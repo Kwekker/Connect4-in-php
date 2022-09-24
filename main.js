@@ -1,9 +1,11 @@
-const colors = ["red", "yellow", "#777"];
+const colors = ["#777", "red", "yellow"];
 let myName;
 let opponent;
 let key;
 let addButtons = false;
 let interval;
+let debugThing;
+let board;
 
 const States = {
     start: 0,
@@ -12,10 +14,17 @@ const States = {
 }
 let state = 0;
 
+addEventListener('beforeunload', (event) => {
+    $.ajax({
+        type: "POST",
+        url: "update.php",
+        data: {leave: 1, name: myName, key: key}
+    });
+});
 
 function update() {
-    console.log("update");
     if(state == States.waiting) {
+        console.log("Wait update");
         if(!addButtons) {
             $.ajax({
                 type: "POST",
@@ -32,6 +41,11 @@ function update() {
         }
         makeQueue();
     }
+    else {
+        console.log("Play update");
+        updateBoard();
+    }
+
     $.ajax({
         type: "POST",
         url: "update.php",
@@ -39,13 +53,47 @@ function update() {
         success: function (data) {
             console.log(data);
             if(data == "badkey") {
-                alert("Your connection timed out. You have been kicked out of the queue. I'm sorry :(");
-                location.reload();
+                badKey();
             }
         }
 
     });
 }
+
+
+function updateBoard() {
+    fetch('data/board.dat?r=' + Math.random()).then((response) => response.arrayBuffer()).then((array) => {
+        board = new Uint8Array(array);
+        for(let j = 0; j < 6; j++) {
+            for(let i = 0; i < 7; i++) {
+                if(board[j * 7 + i]) {
+                    changeColor(i, j, (0x0f & board[j * 7 + i]));
+                }
+            }
+        }
+    });
+}
+
+
+function drop(col) {
+    $.ajax({
+        type: "POST",
+        url: "drop.php",
+        data: {name: myName, key: key, col: col},
+
+        success: function (data) {
+            console.log(data);
+            if(data == "badkey") badKey();
+            if(data == "badturn") {
+                $("#gameMessage").text("It's not your turn nerd");
+                setTimeout(() => {
+                    $("#gameMessage").empty();
+                }, 2000);
+            }
+        }
+    });
+}
+
 
 function makeQueue() {
     let queue = $("#queue");
@@ -114,7 +162,7 @@ function recKey(data) {
         return;
     }
 
-    if(data == "badname") {
+    if(data == "cringe") {
         $("#message").text("That name is cringe.");
         return;
     }
@@ -131,6 +179,12 @@ function recKey(data) {
     if(interval == undefined) interval = setInterval(update, 3500);
 }
 
+function badKey() {
+    console.log("Nah if you're seeing this you were probably trying to hack into the mainframe weren't you? Silly little goose");
+    alert("Your connection timed out. You have been kicked out of the queue/game. I'm sorry :(");
+    location.reload();
+}
+
 function changeColor(x, y, color) {
-    $("#c"+x+" :nth-child("+y+")").css("background-color", colors[color]);
+    $("#c"+ x +" :nth-child("+ (y + 1) +")").css("background-color", colors[color]);
 }

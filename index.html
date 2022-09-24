@@ -20,20 +20,47 @@
         }
 
         .me {
-            text-decoration: wavy underline;
+            color: #c57e7e;
         }
 
         .queue button {
             display: block;
         }
+
+        .leftBox {
+            display: inline-block;
+            border: 5px solid black;
+            background-color: #000;
+        }
+
+        .alignleft {
+            float: left;
+        }
+        .aligncenter {
+            color: red;
+            position: absolute;
+            left: 40%;
+            width: 20%;
+            text-align: center;
+        }
+        .alignright {
+            float: right;
+        }
+
+        #gameInfo {
+            font-size: xx-large;
+            display: block;
+            padding: 5px;
+            position: relative;
+        }
     
         .board {
             width: 600px;
+            resize: horizontal;
             background-color: #333;
             display: inline-table;
-            border: 5px solid black;
+            border-bottom: 5px solid #000;
             table-layout: fixed;
-            resize: horizontal;
             overflow: hidden;
             padding-right: 5px;
         }
@@ -50,72 +77,46 @@
             padding-top: 100%;
             position: relative;
             border-radius: 100%;
-            margin: 10px 0;
+            margin: 5px 0;
         }
     
     </style>
 
 </head>
 <body>
-
-    <div class="board">
-        <div class="column" id="c0">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
+    <div class="leftBox">
+        <div class="board">
+            <div class="column" id="c0" onclick="drop(0)">
+                <div></div> <div></div> <div></div> <div></div> <div></div> <div></div>
+            </div>
+            <div class="column" id="c1" onclick="drop(1)">
+                <div></div> <div></div> <div></div> <div></div> <div></div> <div></div>
+            </div>
+            <div class="column" id="c2" onclick="drop(2)">
+                <div></div> <div></div> <div></div> <div></div> <div></div> <div></div>
+            </div>
+            <div class="column" id="c3" onclick="drop(3)">
+                <div></div> <div></div> <div></div> <div></div> <div></div> <div></div>
+            </div>
+            <div class="column" id="c4" onclick="drop(4)">
+                <div></div> <div></div> <div></div> <div></div> <div></div> <div></div>
+            </div>
+            <div class="column" id="c5" onclick="drop(5)">
+                <div></div> <div></div> <div></div> <div></div> <div></div> <div></div>
+            </div>
+            <div class="column" id="c6" onclick="drop(6)">
+                <div></div> <div></div> <div></div> <div></div> <div></div> <div></div>
+            </div>
         </div>
-        <div class="column" id="c1">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-        <div class="column" id="c2">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-        <div class="column" id="c3">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-        <div class="column" id="c4">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-        <div class="column" id="c5">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-        <div class="column" id="c6">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
+        <br>
+        <div id="gameInfo">
+            <p class="alignleft">Sam</p>
+            <p class="aligncenter">VS</p>
+            <p class="alignright">Max</p>
+            <div style="clear: both;"></div>
         </div>
     </div>
+    
     <div class="sidebar">
         <div id="sideinfo">
             <form id="nameform" onsubmit="submitName(event)">
