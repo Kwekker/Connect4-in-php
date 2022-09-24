@@ -11,7 +11,7 @@
         
         $timeNow = time();
         if(isset($_POST['leave'])) {
-            if(databaseContains("players.txt", $name)) {
+            if(isPlayer($name)) {
                 stopGame();
             }
             removeFromAll($name, false);
@@ -19,6 +19,9 @@
         else databaseEdit("times.txt", $name, $timeNow);
 
         if($timeNow - intval(file_get_contents("lastcheck.txt")) > 10) {
+            $player0 = databaseRead("players.txt", "0");
+            $player1 = databaseRead("players.txt", "1");
+
             file_put_contents("lastcheck.txt", $timeNow, LOCK_EX);
             $file = file_get_contents("times.txt");
             $timedOut = array();
@@ -34,7 +37,13 @@
             } 
             
             foreach ($timedOut as $name) {
-                removeFromAll($name);
+                if($name == $player0 || $name == $player1) {
+                    stopGame();
+                    removeFromAll($name, false);
+                }
+                else {
+                    removeFromAll($name);
+                }
             }
         }
     }

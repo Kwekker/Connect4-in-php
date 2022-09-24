@@ -20,7 +20,7 @@
         }
 
         .me {
-            color: #c57e7e;
+            color: #7ec5aa;
         }
 
         .queue button {
@@ -52,6 +52,19 @@
             display: block;
             padding: 5px;
             position: relative;
+        }
+        
+        #gameMessage:empty {
+            border: none;
+            padding: 15px;
+        }
+
+        #gameMessage {
+            font-size: x-large;
+            text-align: center;
+            padding: 0px;
+            font-style: italic;
+            color: #444;
         }
     
         .board {
@@ -115,6 +128,8 @@
             <p class="alignright">Max</p>
             <div style="clear: both;"></div>
         </div>
+        <hr>
+        <p id="gameMessage"></p>
     </div>
     
     <div class="sidebar">

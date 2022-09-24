@@ -31,8 +31,9 @@ function update() {
                 url: "choose.php",
                 data: {can: 1, name: myName},
                 success: function(data) {
-                    if(data === "1") addButtons = true;
-                    else if(data !== "0") {
+                    if(data == "1") addButtons = true;
+                    else if(data != "0") {
+                        console.log("Started playing against " + data);
                         opponent = data;
                         startPlaying();
                     }
@@ -76,22 +77,29 @@ function updateBoard() {
 
 
 function drop(col) {
-    $.ajax({
-        type: "POST",
-        url: "drop.php",
-        data: {name: myName, key: key, col: col},
+    if(state == States.playing) {
+        console.log("Dropping piece on col " + col + "...");
+        $.ajax({
+            type: "POST",
+            url: "drop.php",
+            data: {name: myName, key: key, col: col},
 
-        success: function (data) {
-            console.log(data);
-            if(data == "badkey") badKey();
-            if(data == "badturn") {
-                $("#gameMessage").text("It's not your turn nerd");
-                setTimeout(() => {
-                    $("#gameMessage").empty();
-                }, 2000);
+            success: function (data) {
+                let str = data + "";
+                console.log(str);
+                if(str == "badkey") badKey();
+                else if(str == "badturn") {
+                    gameMessage("It's not your turn nerd");
+                }
+                else if(str == "fullcol") {
+                    gameMessage("That column is already filled to the brim");
+                }
+                else {
+                    changeColor(col, str.substring(1) & 0xf, !(str.charAt(0) & 0xf) + 1);
+                }
             }
-        }
-    });
+        });
+    }
 }
 
 
@@ -179,6 +187,13 @@ function recKey(data) {
     if(interval == undefined) interval = setInterval(update, 3500);
 }
 
+function gameMessage(message) {
+    $("#gameMessage").text(message);
+    setTimeout(() => {
+        $("#gameMessage").empty();
+    }, 2000);
+}
+
 function badKey() {
     console.log("Nah if you're seeing this you were probably trying to hack into the mainframe weren't you? Silly little goose");
     alert("Your connection timed out. You have been kicked out of the queue/game. I'm sorry :(");
@@ -186,5 +201,7 @@ function badKey() {
 }
 
 function changeColor(x, y, color) {
+    if(colors[color] == undefined) console.log(color, " is not a color I know sadly");
+    console.log(x, y, color);
     $("#c"+ x +" :nth-child("+ (y + 1) +")").css("background-color", colors[color]);
 }

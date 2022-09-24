@@ -56,4 +56,8 @@
         if($newFile !== false) file_put_contents($fileName, $newFile, LOCK_EX);
         return true;
     }
+
+    function isPlayer(string $name) {
+        return databaseRead("players.txt", '0') == $name || databaseRead("players.txt", '1') == $name;
+    }
 ?>

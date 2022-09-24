@@ -10,9 +10,8 @@
         if(canChoose($name)) {
             echo "1";
         }
-        else if(databaseContains("players.txt", $name)) {
-            $file = file_get_contents("players.txt");
-            $opponent = substr($file, 1, strpos($file, " ", 3));
+        else if(isPlayer($name)) {
+            $opponent = databaseRead("players.txt", "0");
             echo "$opponent";
         }
         else echo "0";
@@ -33,8 +32,8 @@
         }
 
         //Remove these players from queue.txt and add them to players.txt
-        databaseInsert("players.txt", $name, "0");
-        databaseInsert("players.txt", $opponent, "1");
+        databaseInsert("players.txt", "0", $name);
+        databaseInsert("players.txt", "1", $opponent);
         file_put_contents("data.txt", "11$name", LOCK_EX);
         databaseRemove("queue.txt", $name);
         databaseRemove("queue.txt", $opponent);

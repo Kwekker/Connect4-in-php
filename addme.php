@@ -9,7 +9,7 @@
             die;
         }
 
-        if(databaseContains("keys.txt", $name) || $name == "null") {
+        if(databaseContains("keys.txt", $name)) {
             echo "taken";
             die;
         }
