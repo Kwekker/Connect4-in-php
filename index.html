@@ -33,18 +33,25 @@
             background-color: #000;
         }
 
-        .alignleft {
+        .alignLeft {
             float: left;
+            min-width: 200px;
+            margin-right: 30px;
+            color: yellow;
         }
-        .aligncenter {
-            color: red;
+        .alignCenter {
+            color:aqua;
             position: absolute;
             left: 40%;
             width: 20%;
             text-align: center;
         }
-        .alignright {
+        .alignRight {
             float: right;
+            min-width: 200px;
+            margin-left: 30px;
+            text-align: right;
+            color: red;
         }
 
         #gameInfo {
@@ -54,6 +61,17 @@
             position: relative;
         }
         
+        #gameInfo p:empty{
+            padding: 3px;
+        }
+        
+        #gameInfo p:empty::after {
+            content: "Hi there nerd";
+            color: black;
+            text-decoration: underline maroon;
+            font-size: xx-large;
+        }
+
         #gameMessage:empty {
             border: none;
             padding: 15px;
@@ -65,6 +83,20 @@
             padding: 0px;
             font-style: italic;
             color: #444;
+        }
+
+        .turnIndicator {
+            width: 0; 
+            height: 0; 
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 30px solid cyan;
+            transition-duration: 500ms;
+            margin-left: 2%;
+        }
+
+        .turnIndicator.right {
+            margin-left: calc(98% - 30px);
         }
     
         .board {
@@ -123,10 +155,12 @@
         </div>
         <br>
         <div id="gameInfo">
-            <p class="alignleft">Sam</p>
-            <p class="aligncenter">VS</p>
-            <p class="alignright">Max</p>
+            <!-- hehehe we ain't using lua indexes here -->
+            <p class="alignLeft" id="player0"></p>
+            <p class="alignCenter">VS</p>
+            <p class="alignRight" id="player1"></p>
             <div style="clear: both;"></div>
+            <div id="turn" class="turnIndicator"></div>
         </div>
         <hr>
         <p id="gameMessage"></p>

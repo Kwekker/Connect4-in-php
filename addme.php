@@ -4,7 +4,7 @@
     if(isset($_POST['name'])) {
         $name = $_POST['name'];
 
-        if(!ctype_alnum($name) || strlen($name) < 3) {
+        if(!ctype_alnum($name) || strlen($name) < 3 || strlen($name) > 12) {
             echo "cringe";
             die;
         }

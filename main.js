@@ -1,11 +1,14 @@
 const colors = ["#777", "red", "yellow"];
 let myName;
 let opponent;
+let youFirst; //If you had the first turn or not. This decides your color and when you can drop pieces.
+let turn;     //The turn the game is on. Literally the second value in data.txt
 let key;
 let addButtons = false;
-let interval;
+
 let debugThing;
 let board;
+let interval;
 
 const States = {
     start: 0,
@@ -31,12 +34,21 @@ function update() {
                 url: "choose.php",
                 data: {can: 1, name: myName},
                 success: function(data) {
-                    if(data == "1") addButtons = true;
-                    else if(data != "0") {
+                    let str = data + "";
+                    console.log("I got ", str);
+                    if(str.charAt(0) != '0' && str.charAt(0) != '1') {
                         console.log("Started playing against " + data);
                         opponent = data;
-                        startPlaying();
+                        startPlaying(false);
                     }
+                    else {
+                        if(str.charAt(0) == '1') addButtons = true;
+                        if(str.charAt(1) == '1') {
+                            setNames(str.substring(2, str.indexOf(",")), str.substring(str.indexOf(",") + 1));
+                        }
+                        else setNames("", "");
+                    }
+                    
                 },
             });
         }
@@ -57,14 +69,20 @@ function update() {
                 badKey();
             }
         }
-
     });
 }
 
 
 function updateBoard() {
-    fetch('data/board.dat?r=' + Math.random()).then((response) => response.arrayBuffer()).then((array) => {
-        board = new Uint8Array(array);
+    $.get("gameinfo.php", function(data, status) {
+        let str = data + "";
+        if(str.charAt(0) == '0') {
+            gameMessage("Your opponent left the game lol.<br>Reload the page to re-enter the queue.<h6>I'm not going to be the one to implement a restart button lol</h6>", true);
+            return;
+        }
+        turn = str.charAt(1) == '1';
+        changeTurnIndicator(turn);
+        board = str.substring(2);
         for(let j = 0; j < 6; j++) {
             for(let i = 0; i < 7; i++) {
                 if(board[j * 7 + i]) {
@@ -77,7 +95,7 @@ function updateBoard() {
 
 
 function drop(col) {
-    if(state == States.playing) {
+    if(state == States.playing && youFirst == turn) {
         console.log("Dropping piece on col " + col + "...");
         $.ajax({
             type: "POST",
@@ -88,18 +106,26 @@ function drop(col) {
                 let str = data + "";
                 console.log(str);
                 if(str == "badkey") badKey();
-                else if(str == "badturn") {
-                    gameMessage("It's not your turn nerd");
-                }
                 else if(str == "fullcol") {
                     gameMessage("That column is already filled to the brim");
                 }
-                else {
-                    changeColor(col, str.substring(1) & 0xf, !(str.charAt(0) & 0xf) + 1);
+                else if(str == "badturn") {
+                    gameMessage("It's not your turn nerd.");
                 }
+                else if(str.startsWith("yes") || str.startsWith("win")) {
+                    if(str.startsWith("win")) gameMessage("<h2>YOU FUCKING WON MATE</h2>");
+                    str = str.substring(3);
+                    changeColor(col, str.substring(1) & 0xf, !(str.charAt(0) & 0xf) + 1);
+                    turn = !turn;
+                    changeTurnIndicator(turn);
+                }
+                else gameMessage("php error apparently. Tell Jochem he's bad at coding");
             }
         });
     }
+    else if(youFirst != turn) gameMessage("Your opponent is still contemplating their next move.");
+    else if(state == States.start) gameMessage("You have to submit your name first :/");
+    else if(state == States.waiting) gameMessage("You are still waiting in the queue..");
 }
 
 
@@ -129,6 +155,14 @@ function makeQueue() {
     });
 }
 
+function setNames(player0, player1) {
+    console.log("length = ", player0.length);
+    $("#player0").text(player0);
+    if(player0.length > 10) $("#player0").css("font-size", "x-large");
+    $("#player1").text(player1);
+    if(player1.length > 10) $("#player1").css("font-size", "x-large");
+}
+
 function chooseOpponent(oppo) {
     $.ajax({
         type: "POST",
@@ -138,17 +172,21 @@ function chooseOpponent(oppo) {
             if(data == "yes") {
                 opponent = oppo;
                 addButtons = false;
-                startPlaying();
+                startPlaying(true);
             }
         },
     });
 }
 
-function startPlaying() {
+function startPlaying(yourTurn) {
+    youFirst = yourTurn;
+    turn = yourTurn;
     state = States.playing;
     let sideInfo = $("#sideinfo");
     sideInfo.empty();
     sideInfo.append("<h2>" + myName + "</h2><hr><h3>Playing against " + opponent + "</h3><div class='queue' id='queue'></div>");
+    if(yourTurn) setNames(myName, opponent);
+    else setNames(opponent, myName);
 }
 
 function submitName(event) {
@@ -187,9 +225,14 @@ function recKey(data) {
     if(interval == undefined) interval = setInterval(update, 3500);
 }
 
-function gameMessage(message) {
-    $("#gameMessage").text(message);
-    setTimeout(() => {
+function changeTurnIndicator(turn) {
+    if(turn) $("#turn").removeClass("right");
+    else $("#turn").addClass("right");
+}
+
+function gameMessage(message, stay = false) {
+    $("#gameMessage").html(message);
+    if(stay == false) setTimeout(() => {
         $("#gameMessage").empty();
     }, 2000);
 }
@@ -202,6 +245,5 @@ function badKey() {
 
 function changeColor(x, y, color) {
     if(colors[color] == undefined) console.log(color, " is not a color I know sadly");
-    console.log(x, y, color);
     $("#c"+ x +" :nth-child("+ (y + 1) +")").css("background-color", colors[color]);
 }

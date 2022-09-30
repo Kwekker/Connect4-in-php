@@ -13,8 +13,9 @@
         if(isset($_POST['leave'])) {
             if(isPlayer($name)) {
                 stopGame();
+                removeFromAll($name, true);
             }
-            removeFromAll($name, false);
+            removeFromAll($name);
         }
         else databaseEdit("times.txt", $name, $timeNow);
 
@@ -37,9 +38,9 @@
             } 
             
             foreach ($timedOut as $name) {
-                if($name == $player0 || $name == $player1) {
+                if($name === $player0 || $name === $player1) {
                     stopGame();
-                    removeFromAll($name, false);
+                    removeFromAll($name, true);
                 }
                 else {
                     removeFromAll($name);
@@ -48,10 +49,13 @@
         }
     }
 
-    function removeFromAll($name, $waiting = true) {
+    function removeFromAll($name, $playing = false) {
         databaseRemove("keys.txt", $name);
         databaseRemove("times.txt", $name);
-        if($waiting) databaseRemove("queue.txt", $name);
+        if(!$playing) {
+            echo "Literally removing $name from queue.txt right fucking now.\n";
+            databaseRemove("queue.txt", $name);
+        }
     }
 
     function stopGame() {
