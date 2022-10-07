@@ -26,6 +26,19 @@ addEventListener('beforeunload', (event) => {
     });
 });
 
+if(localStorage.name != undefined) {
+    if(localStorage.instaJoin == true) {
+        console.log("instaJoining");
+        submitName(localStorage.name);
+        localStorage.instaJoin = false;
+    }
+    else {
+        $("#name").val(localStorage.name);
+        $("#name").focus();
+    }
+
+}
+
 function update() {
     if(state == State.waiting) {
         console.log("Wait update");
@@ -78,7 +91,16 @@ function updateBoard() {
     $.get("gameinfo.php", function(data, status) {
         let str = data + "";
         if(str.charAt(0) == 'l') {
-            gameMessage("Your opponent left the game lol.<br>Reload the page to re-enter the queue.<h6>I'm not going to be the one to implement a restart button lol</h6>", true);
+            if(localStorage.hasSeenDumbResetButtonJoke != true) {
+                gameMessage("Your opponent left the game lol.<br>Reload the page to re-enter the queue.<h6>I'm not going to be the one to implement a restart button lol</h6>", true);
+                setTimeout(() => {
+                    gameMessage("<h5>Ok ok ok please stop crying here is a reset button:</h5> <br><button onclick='reset()'>Re-enter queue</button>", true); 
+                }, 7);
+                localStorage.hasSeenDumbResetButtonJoke = true;
+            }
+            else gameMessage("<button onclick='reset()'>Re-enter queue</button>", true);
+
+
             return;
         }
         else if(str.charAt(0) == 'w') {
@@ -148,7 +170,7 @@ function win() {
             mes += "<span class='lose'>YOU LOST! L</span>";
 
         //Leave me alone
-        mes += "<br><br><button onclick='location.reload()'>Re-enter queue</button>";
+        mes += "<br><br><button onclick='reset()'>Re-enter queue</button>";
         gameMessage(mes, true);
 
         for(let i = 1; i < arr.length; i++) {
@@ -224,14 +246,21 @@ function startPlaying(yourTurn) {
 }
 
 function submitName(event) {
-    myName = $("#name").val();
+    if (typeof event === 'string' || event instanceof String) {
+        myName = event;
+    }
+    else {
+        myName = $("#name").val();
+        localStorage.name = myName;
+        event.preventDefault();
+    }
+
     $.ajax({
         type: "POST",
         url: "addme.php",
         data: {name: myName},
         success: recKey,
     });
-    event.preventDefault();
     return false;
 }
 
@@ -274,6 +303,11 @@ function gameMessage(message, stay = false) {
 function badKey() {
     console.log("Nah if you're seeing this you were probably trying to hack into the mainframe weren't you? Silly little goose");
     alert("Your connection timed out. You have been kicked out of the queue/game. I'm sorry :(");
+    location.reload();
+}
+
+function reset() {
+    localStorage.instaJoin = 1;
     location.reload();
 }
 
