@@ -160,7 +160,7 @@ function win() {
 function makeQueue() {
     let queue = $("#queue");
     queue.empty();
-    fetch('data/queue.txt?r=' + Math.random()).then((response) => response.text()).then((text) => {
+    $.get("data/queue.txt", function(text) {
         let array = text.split(":");
         for(let name of array) {
             name = name.trim();
@@ -208,7 +208,7 @@ function chooseOpponent(oppo) {
 
 function startPlaying(yourTurn) {
     youFirst = yourTurn;
-    turn = yourTurn;
+    turn = true;
     state = State.playing;
     let sideInfo = $("#sideinfo");
     sideInfo.empty();
