@@ -130,9 +130,9 @@ function drop(col) {
             }
         });
     }
-    else if(youFirst != turn) gameMessage("Your opponent is still contemplating their next move.");
     else if(state == State.start) gameMessage("You have to submit your name first :/");
     else if(state == State.waiting) gameMessage("You are still waiting in the queue..");
+    else if(youFirst != turn && state != State.done) gameMessage("Your opponent is still contemplating their next move.");
 }
 
 function win() {
@@ -140,10 +140,16 @@ function win() {
         let arr = data + "";
         arr = arr.split(',');
         let winner = arr[0];
+        let mes = "";
+
         if(winner === myName)
-            gameMessage("<span class='win'>YOU WON! WOOOO</span>", true);
+            mes += "<span class='win'>YOU WON! WOOOO</span>";
         else 
-            gameMessage("<span class='lose'>YOU LOST! L</span>", true);
+            mes += "<span class='lose'>YOU LOST! L</span>";
+
+        //Leave me alone
+        mes += "<br><br><button onclick='location.reload()'>Re-enter queue</button>";
+        gameMessage(mes, true);
 
         for(let i = 1; i < arr.length; i++) {
             const index = parseInt(arr[i]);
