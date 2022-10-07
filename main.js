@@ -1,4 +1,4 @@
-const colors = ["#777", "red", "yellow"];
+const colors = ["#777", "red", "yellow", "#0f0"];
 let myName;
 let opponent;
 let youFirst; //If you had the first turn or not. This decides your color and when you can drop pieces.
@@ -10,10 +10,11 @@ let debugThing;
 let board;
 let interval;
 
-const States = {
+const State = {
     start: 0,
     waiting: 1,
-    playing: 2
+    playing: 2,
+    done: 3
 }
 let state = 0;
 
@@ -26,7 +27,7 @@ addEventListener('beforeunload', (event) => {
 });
 
 function update() {
-    if(state == States.waiting) {
+    if(state == State.waiting) {
         console.log("Wait update");
         if(!addButtons) {
             $.ajax({
@@ -76,8 +77,12 @@ function update() {
 function updateBoard() {
     $.get("gameinfo.php", function(data, status) {
         let str = data + "";
-        if(str.charAt(0) == '0') {
+        if(str.charAt(0) == 'l') {
             gameMessage("Your opponent left the game lol.<br>Reload the page to re-enter the queue.<h6>I'm not going to be the one to implement a restart button lol</h6>", true);
+            return;
+        }
+        else if(str.charAt(0) == 'w') {
+            win();
             return;
         }
         turn = str.charAt(1) == '1';
@@ -95,7 +100,7 @@ function updateBoard() {
 
 
 function drop(col) {
-    if(state == States.playing && youFirst == turn) {
+    if(state == State.playing && youFirst == turn) {
         console.log("Dropping piece on col " + col + "...");
         $.ajax({
             type: "POST",
@@ -113,21 +118,44 @@ function drop(col) {
                     gameMessage("It's not your turn nerd.");
                 }
                 else if(str.startsWith("yes") || str.startsWith("win")) {
-                    if(str.startsWith("win")) gameMessage("<h2>YOU FUCKING WON MATE</h2>");
+                    if(str.startsWith("win")) win();
+                    else {
+                        turn = !turn;
+                        changeTurnIndicator(turn);
+                    }
                     str = str.substring(3);
                     changeColor(col, str.substring(1) & 0xf, !(str.charAt(0) & 0xf) + 1);
-                    turn = !turn;
-                    changeTurnIndicator(turn);
                 }
                 else gameMessage("php error apparently. Tell Jochem he's bad at coding");
             }
         });
     }
     else if(youFirst != turn) gameMessage("Your opponent is still contemplating their next move.");
-    else if(state == States.start) gameMessage("You have to submit your name first :/");
-    else if(state == States.waiting) gameMessage("You are still waiting in the queue..");
+    else if(state == State.start) gameMessage("You have to submit your name first :/");
+    else if(state == State.waiting) gameMessage("You are still waiting in the queue..");
 }
 
+function win() {
+    $.get("data/wininfo.txt", function(data) {
+        let arr = data + "";
+        arr = arr.split(',');
+        let winner = arr[0];
+        if(winner === myName)
+            gameMessage("<span class='win'>YOU WON! WOOOO</span>", true);
+        else 
+            gameMessage("<span class='lose'>YOU LOST! L</span>", true);
+
+        for(let i = 1; i < arr.length; i++) {
+            const index = parseInt(arr[i]);
+            if(isFinite(index)) {
+                changeColor(index % 7, Math.floor(index / 7), 3);
+            }
+        }
+
+        state = State.done;
+        clearInterval(interval);
+    });
+}
 
 function makeQueue() {
     let queue = $("#queue");
@@ -181,7 +209,7 @@ function chooseOpponent(oppo) {
 function startPlaying(yourTurn) {
     youFirst = yourTurn;
     turn = yourTurn;
-    state = States.playing;
+    state = State.playing;
     let sideInfo = $("#sideinfo");
     sideInfo.empty();
     sideInfo.append("<h2>" + myName + "</h2><hr><h3>Playing against " + opponent + "</h3><div class='queue' id='queue'></div>");
@@ -214,7 +242,7 @@ function recKey(data) {
     }
 
     key = data;
-    state = States.waiting;
+    state = State.waiting;
 
     console.log($("#sideinfo"));
     $("#sideinfo").empty();
@@ -244,6 +272,12 @@ function badKey() {
 }
 
 function changeColor(x, y, color) {
-    if(colors[color] == undefined) console.log(color, " is not a color I know sadly");
-    $("#c"+ x +" :nth-child("+ (y + 1) +")").css("background-color", colors[color]);
+    if(colors[color] == undefined) {
+        console.log(color, " is not a color I know sadly");
+        return;
+    }
+    if(x >= 0 && x < 7 && y >= 0 && y < 6) {
+        $("#c"+ x +" :nth-child("+ (y + 1) +")").css("background-color", colors[color]);
+    }
+    else console.log("cringe coordinates: ", "x = ", x, "y = ", y);
 }

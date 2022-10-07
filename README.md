@@ -10,4 +10,4 @@ Features:
 * When the current game is done the first person in line gets to choose who to play against.
 * I might add a feature that makes it so that said person has a time limit to choose to prevent someone from making the game unplayable.
 * Users authenticate themselves using a hex key. These keys are stored in the file keys.txt (which will obviously be unavailable to users).
-* I could probably use cookies for the keys but to be honest I really don't feel like doing that.
+

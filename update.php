@@ -59,7 +59,7 @@
     }
 
     function stopGame() {
-        file_put_contents("data.txt", "000", LOCK_EX);
+        file_put_contents("data.txt", "l00", LOCK_EX);
         file_put_contents("players.txt", "", LOCK_EX);
     }
 
