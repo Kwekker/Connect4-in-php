@@ -35,6 +35,7 @@ if(localStorage.name != undefined) {
     else {
         $("#name").val(localStorage.name);
         $("#name").focus();
+        $("#name").select();
     }
 
 }
@@ -94,11 +95,11 @@ function updateBoard() {
             if(localStorage.hasSeenDumbResetButtonJoke != true) {
                 gameMessage("Your opponent left the game lol.<br>Reload the page to re-enter the queue.<h6>I'm not going to be the one to implement a restart button lol</h6>", true);
                 setTimeout(() => {
-                    gameMessage("<h5>Ok ok ok please stop crying here is a reset button:</h5> <br><button onclick='reset()'>Re-enter queue</button>", true); 
+                    gameMessage("<h5>Ok ok ok please stop crying here is a reset button:</h5> <br><button class='button' onclick='reset()'>Re-enter queue</button>", true); 
                 }, 7);
                 localStorage.hasSeenDumbResetButtonJoke = true;
             }
-            else gameMessage("<button onclick='reset()'>Re-enter queue</button>", true);
+            else gameMessage("<button class='button' onclick='reset()'>Re-enter queue</button>", true);
 
 
             return;
@@ -158,6 +159,7 @@ function drop(col) {
 }
 
 function win() {
+    clearInterval(interval);
     $.get("data/wininfo.txt", function(data) {
         let arr = data + "";
         arr = arr.split(',');
@@ -181,7 +183,6 @@ function win() {
         }
 
         state = State.done;
-        clearInterval(interval);
     });
 }
 
