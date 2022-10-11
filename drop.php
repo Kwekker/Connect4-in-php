@@ -32,7 +32,7 @@
         $fileIndex = 0;
         for(; $row >= 0; $row--) {
             $fileIndex = $row * 7 + $col;
-            if($file[$fileIndex] == 0) {
+            if($file[$fileIndex] == '0') {
                 $file[$fileIndex] = 1 + $data[1];
                 break;
             }

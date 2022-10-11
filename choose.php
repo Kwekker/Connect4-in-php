@@ -44,7 +44,7 @@
 
         //Start the game by resetting the board
         //Pretty sure this is the best way of doing this (it's 7 * 6 = 42 0's)
-        $board = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+        $board = "000000000000000000000000000000000000000000";
         file_put_contents("board.dat", $board, LOCK_EX);
 
         echo "yes";
