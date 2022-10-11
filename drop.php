@@ -43,12 +43,13 @@
         }
 
         /*  Check for Wim
-        *1  Check these first.
+        *1  Check these directions in this order.
                 d0
                321
-        *   Count them in an array.
-
         *2  Check in the opposite direction if you haven't already found 4.
+        *3  Repeat with next direction if you haven't already found 4.
+
+
         */
 
         
@@ -57,14 +58,12 @@
         $val = $file[$fileIndex];
         $startX = $fileIndex % 7;
         $win = false;
-        // echo "Start $fileIndex (" . ($fileIndex % 7) . ", " . intdiv($fileIndex, 7) . ")\n";
 
         for($dir = 0; $dir < 4; $dir++) {
             $count = 0;
             for($sign = 1; $sign >= -1; $sign -= 2) {
                 for($dist = 1; $dist < 4; $dist++) {
                     $checkIndex = $fileIndex + $dirs[$dir] * $dist * $sign;
-                    // echo "Index $checkIndex (" . ($checkIndex % 7) . ", " . intdiv($checkIndex, 7) . "): ";
                     //bro just use x and y coordinates you nerd
                     //Don't make this shit harder for yourself this code runs like once every minute.
                     //Shit doesn't have to run on an attiny
@@ -78,21 +77,18 @@
                     ) {
                         $count++;
                         $winningPieces .= "$checkIndex,";
-                        // echo "YES $count\n";
                     }
                     else {
-                        // if($checkIndex < 0 || $checkIndex >= 42) echo "NO >:[ bad index\n";
-                        // else echo "NO >:[" . ($checkIndex < 42 && $checkIndex > 0) . !(($checkX > $startX == ($sign == 1)) && $dir == 3) . !(($checkX < $startX == ($sign == 1)) && $dir <= 1) . ($file[$checkIndex] == $val) . "\n";
                         break;
                     }
                 }
-                if($count >= 3) {
-                    $win = true;
-                    $dir = 69;
-                    break;
-                }
-                $winningPieces = "";
             }
+            if($count >= 3) {
+                $win = true;
+                $dir = 69;
+                break;
+            }
+            $winningPieces = "";
         }
 
         $turn = (($data[1] == '0') ? '1' : '0');
