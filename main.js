@@ -189,7 +189,7 @@ function win() {
 function makeQueue() {
     let queue = $("#queue");
     queue.empty();
-    $.get("data/queue.txt", function(text) {
+    $.get("data/queue.txt?r=" + Math.random(), function(text) {
         let array = text.split(":");
         for(let name of array) {
             name = name.trim();
