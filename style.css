@@ -1,0 +1,160 @@
+body {
+    background-color: #111;
+    color: #eee;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+.sidebar {
+    vertical-align: top;
+    float: right;
+    padding: 10px;
+    padding-right: 20px;
+    border: 2px #777 solid;
+    margin:0;
+}
+
+.me {
+    color: #7ec5aa;
+}
+
+.queue button {
+    display: block;
+}
+
+.leftBox {
+    display: inline-block;
+    border: 5px solid black;
+    background-color: #000;
+}
+
+.alignLeft {
+    text-align: left;
+    margin-right: 30px;
+    margin-bottom: 0;
+    display: inline;
+}
+.alignRight {
+    float: right;
+    margin-left: 30px;
+    margin-top: 0;
+    text-align: right;
+    display: inline;
+}
+.alignCenter {
+    color:aqua;
+    position: absolute;
+    left: 40%;
+    width: 20%;
+    margin-top: 0;
+    text-align: center;
+}
+.leftRightHolder {
+    padding: 10px;
+}
+
+.bubble {
+    background-color: var(--buttonBackground);
+    border: 4px white solid;
+    font-size: large;
+    padding: 5px;
+    transition-duration: 400ms;
+}
+.alignRight.bubble {
+    border-radius: 20px;
+    border-top-right-radius: 0px;
+}
+.alignLeft.bubble {
+    border-radius: 20px;
+    border-top-left-radius: 0px;
+}
+.bubble-gone {
+    border-width: 0;
+    padding: 0;
+    font-size: 0;
+}
+
+.win {
+    color: green;
+    font-style: normal;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.lose {
+    color: red;
+    font-style: normal;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+#gameInfo {
+    font-size: xx-large;
+    display: block;
+    padding: 5px;
+    position: relative;
+}
+
+#gameInfo p:empty{
+    padding: 3px;
+}
+
+#gameInfo p:empty::after {
+    content: "Hi there nerd";
+    color: black;
+    text-decoration: underline maroon;
+    font-size: xx-large;
+}
+
+#gameMessage:empty {
+    border: none;
+    padding: 15px;
+}
+
+#gameMessage {
+    font-size: x-large;
+    text-align: center;
+    padding: 0px;
+    font-style: italic;
+    color: #444;
+}
+
+.turnIndicator {
+    width: 0; 
+    height: 0; 
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 30px solid cyan;
+    transition-duration: 500ms;
+    margin-left: 2%;
+}
+
+.turnIndicator.right {
+    margin-left: calc(98% - 30px);
+}
+
+.board {
+    width: 600px;
+    resize: horizontal;
+    background-color: #333;
+    display: inline-table;
+    border-bottom: 5px solid #000;
+    table-layout: fixed;
+    overflow: hidden;
+    padding-right: 5px;
+}
+
+.column {
+    display: table-cell;
+    padding: 5px;
+}
+
+.column div {
+    background-color: #777;
+    border: black 2px solid;
+    width: 100%;
+    padding-top: 100%;
+    position: relative;
+    border-radius: 100%;
+    margin: 5px 0;
+}
