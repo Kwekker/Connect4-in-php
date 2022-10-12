@@ -1,0 +1,24 @@
+
+:root {
+    --button: rgb(134, 231, 252);
+    --buttonBackground: rgb(9, 48, 164);
+}
+
+.button, .description a{
+    display: inline-block;
+    font-size: 20px;
+    padding: 20px;
+    background-color: var(--button);
+    border: 3px outset lightgray;
+    transition-duration: 0.3s;
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+}
+  
+.button:hover, .description a:hover, input[type=range]::-webkit-slider-thumb:hover{
+    background-color: var(--buttonBackground);
+    color: white;
+    border-style: inset;
+    border-radius:20px;
+}
