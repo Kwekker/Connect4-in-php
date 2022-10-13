@@ -28,20 +28,23 @@ body {
     background-color: #000;
 }
 
-.alignLeft {
+.alignLeft, #bubbleL{
+    left: 10px;
+    position: absolute;
     text-align: left;
     margin-right: 30px;
-    margin-bottom: 0;
+    margin-top: 0;
     display: inline;
 }
-.alignRight {
-    float: right;
+.alignRight, #bubbleR {
+    right: 10px;
+    position: absolute;
+    text-align: right;
     margin-left: 30px;
     margin-top: 0;
-    text-align: right;
     display: inline;
 }
-.alignCenter {
+.alignCenter{
     color:aqua;
     position: absolute;
     left: 40%;
@@ -59,12 +62,14 @@ body {
     font-size: large;
     padding: 5px;
     transition-duration: 400ms;
+    position: absolute;
+    display: inline;
 }
-.alignRight.bubble {
+#bubbleR {
     border-radius: 20px;
     border-top-right-radius: 0px;
 }
-.alignLeft.bubble {
+#bubbleL {
     border-radius: 20px;
     border-top-left-radius: 0px;
 }
@@ -127,6 +132,7 @@ body {
     border-bottom: 30px solid cyan;
     transition-duration: 500ms;
     margin-left: 2%;
+    margin-top: 40px;
 }
 
 .turnIndicator.right {

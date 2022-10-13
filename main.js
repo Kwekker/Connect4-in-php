@@ -294,6 +294,13 @@ function changeTurnIndicator(turn) {
     else $("#turn").addClass("right");
 }
 
+function bubbleMessage(message, side) {
+    $("#bubble" + side).removeClass("bubble-gone");
+    setTimeout(function() {
+        $("#bubble" + side).addClass("bubble-gone");
+    }, 3000);
+}
+
 function gameMessage(message, stay = false) {
     $("#gameMessage").html(message);
     if(stay == false) setTimeout(() => {
