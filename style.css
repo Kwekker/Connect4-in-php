@@ -84,7 +84,7 @@ body {
 .bubble {
     background-color: var(--buttonBackground);
     border: 4px white solid;
-    font-size: large;
+    font-size: x-large;
     padding: 5px;
     transition-duration: 400ms;
     position: absolute;
@@ -169,6 +169,7 @@ body {
 }
 
 /* BOARD THINGS */
+
 .board {
     width: 600px;
     resize: horizontal;
@@ -185,6 +186,10 @@ body {
     padding: 5px;
 }
 
+.column > .distinct {
+    filter: drop-shadow(0 0 6px white);
+}
+
 .column div {
     background-color: #777;
     border: black 2px solid;
@@ -193,6 +198,16 @@ body {
     position: relative;
     border-radius: 100%;
     margin: 5px 0;
+}
+
+.column > .yellow {
+    background-color: yellow;
+}
+.column > .red {
+    background-color: red;
+}
+.column > .green {
+    background-color: #0f0;
 }
 
 .gone {

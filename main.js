@@ -1,4 +1,4 @@
-const colors = ["#777", "red", "yellow", "#0f0"];
+const colors = ["", "red", "yellow", "green"];
 const taunts = [
     "This will actually never be displayed in the game lol",
     "gg",
@@ -20,6 +20,7 @@ let addButtons = false;
 
 let debugThing;
 let board;
+let lastAddedPiece = {x: 0, y: 0};
 let interval;
 
 let lTaunt = false;
@@ -103,6 +104,8 @@ function update() {
 
 
 function updateBoard() {
+    //TODO: Don't ask for the board when it's your turn
+
     $.get("gameinfo.php", function(data, status) {
         let str = data + "";
         if(str.charAt(0) == 'l') {
@@ -128,7 +131,7 @@ function updateBoard() {
         board = str.substring(2);
         for(let j = 0; j < 6; j++) {
             for(let i = 0; i < 7; i++) {
-                if(board[j * 7 + i]) {
+                if(board[j * 7 + i] != '0') {
                     changeColor(i, j, (0x0f & board[j * 7 + i]));
                 }
             }
@@ -321,13 +324,19 @@ function changeTurnIndicator(turn) {
     else $("#turn").addClass("right");
 }
 
+function changeDistinctPiece(x, y) {
+    if(lastAddedPiece != undefined) $("#c"+ lastAddedPiece.x +" :nth-child("+ (lastAddedPiece.y + 1) +")").removeClass("distinct");
+    $("#c"+ x +" :nth-child("+ (y + 1) +")").addClass("distinct");
+    lastAddedPiece = {x:x, y:y};
+    console.log("Setting lap to ", x, y, "so it's now ", lastAddedPiece);
+}
+
 function sendTaunt(index) {
     $.ajax({
         type: "POST",
         url: "taunt.php",
         data: {taunt: index, name: myName, key: key},
         success: function(data) {
-            console.log("taunt: ", data);
             if(data == "yes") bubbleMessage(index, youFirst);
             if(index != 0) setTimeout(function () {sendTaunt(0)}, 4000);
         }
@@ -344,7 +353,6 @@ function bubbleMessage(message, side) {
     }
     if(side) lTaunt = message != 0;
     else rTaunt = message != 0;
-    console.log("made it ", !!message);
 }
 
 function gameMessage(message, stay = false) {
@@ -356,7 +364,8 @@ function gameMessage(message, stay = false) {
 
 function badKey() {
     console.log("Nah if you're seeing this you were probably trying to hack into the mainframe weren't you? Silly little goose");
-    alert("Your connection timed out. You have been kicked out of the queue/game. I'm sorry :(");
+    clearInterval(interval);
+    alert("Your connection timed out. You have been kicked out of the " + (state == State.waiting ? "queue" : "game") + ". I'm sorry :(");
     location.reload();
 }
 
@@ -371,7 +380,11 @@ function changeColor(x, y, color) {
         return;
     }
     if(x >= 0 && x < 7 && y >= 0 && y < 6) {
-        $("#c"+ x +" :nth-child("+ (y + 1) +")").css("background-color", colors[color]);
+        let el = $("#c"+ x +" :nth-child("+ (y + 1) +")");
+
+        let distinct = false;
+        if(!el.hasClass("set")) changeDistinctPiece(x, y);
+        el.removeClass("red yellow").addClass(colors[color] + " set");
     }
     else console.log("cringe coordinates: ", "x = ", x, "y = ", y);
 }
