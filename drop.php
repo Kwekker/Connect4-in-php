@@ -23,7 +23,7 @@
             die;
         }
 
-        $file = file_get_contents("board.dat");
+        $file = file_get_contents("board.txt");
 
         //If you need defines for the width and height of a connect 4 board 
         //because that isn't obvious to you, then you're not worthy of this code.
@@ -94,7 +94,7 @@
         $turn = (($data[1] == '0') ? '1' : '0');
         $newData = "1" . $turn . $name;
 
-        file_put_contents("board.dat", $file, LOCK_EX);
+        file_put_contents("board.txt", $file, LOCK_EX);
         file_put_contents("data.txt", $newData, LOCK_EX);
         if($win) {
             echo "win" . $turn . $row;

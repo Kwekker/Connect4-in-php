@@ -2,7 +2,7 @@
     require "lib.php";
 
     if(isset($_POST['test'])) {
-        echo databaseRead("board.dat", "papa", 3);
+        echo databaseRead("board.txt", "papa", 3);
     }
 
     if(isset($_POST['can']) && isset($_POST['name'])) {        
@@ -45,7 +45,7 @@
         //Start the game by resetting the board
         //Pretty sure this is the best way of doing this (it's 7 * 6 = 42 0's)
         $board = "000000000000000000000000000000000000000000";
-        file_put_contents("board.dat", $board, LOCK_EX);
+        file_put_contents("board.txt", $board, LOCK_EX);
 
         echo "yes";
     }

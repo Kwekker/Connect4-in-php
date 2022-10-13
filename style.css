@@ -5,6 +5,7 @@ body {
 }
 
 
+/* RIGHT BOX THINGS */
 .sidebar {
     vertical-align: top;
     float: right;
@@ -22,6 +23,9 @@ body {
     display: block;
 }
 
+
+
+/* LEFT BOX THINGS */
 .leftBox {
     display: inline-block;
     border: 5px solid black;
@@ -77,6 +81,10 @@ body {
     border-width: 0;
     padding: 0;
     font-size: 0;
+}
+
+.leftBox hr {
+    margin-top: 20px;
 }
 
 .win {
@@ -139,6 +147,7 @@ body {
     margin-left: calc(98% - 30px);
 }
 
+/* BOARD THINGS */
 .board {
     width: 600px;
     resize: horizontal;

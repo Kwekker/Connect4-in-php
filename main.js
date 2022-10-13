@@ -1,4 +1,5 @@
 const colors = ["#777", "red", "yellow", "#0f0"];
+const messages = ["Stervus Minervus", "gg", "oh..", "cringe", "😳", "nice", "oh ok thanks I guess"];
 let myName;
 let opponent;
 let youFirst; //If you had the first turn or not. This decides your color and when you can drop pieces.
@@ -295,9 +296,11 @@ function changeTurnIndicator(turn) {
 }
 
 function bubbleMessage(message, side) {
-    $("#bubble" + side).removeClass("bubble-gone");
+    $("#bubble" + side).removeClass("bubble-gone").text(messages[message]);
+    if(messages[message].length < 3) $("#bubble" + side).css("font-size", "xx-large");
+
     setTimeout(function() {
-        $("#bubble" + side).addClass("bubble-gone");
+        $("#bubble" + side).css({"font-size" : ""}).addClass("bubble-gone");
     }, 3000);
 }
 
