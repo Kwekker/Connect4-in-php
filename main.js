@@ -1,5 +1,16 @@
 const colors = ["#777", "red", "yellow", "#0f0"];
-const messages = ["Stervus Minervus", "gg", "oh..", "cringe", "😳", "nice", "oh ok thanks I guess"];
+const taunts = [
+    "This will actually never be displayed in the game lol",
+    "gg",
+    "nice",
+    "oh..",
+    "fuck",
+    "cringe",
+    "No.",
+    ":)",
+    "oh ok thanks I guess",
+    "Stervus Minervus",
+];
 let myName;
 let opponent;
 let youFirst; //If you had the first turn or not. This decides your color and when you can drop pieces.
@@ -10,6 +21,9 @@ let addButtons = false;
 let debugThing;
 let board;
 let interval;
+
+let lTaunt = false;
+let rTaunt = false;
 
 const State = {
     start: 0,
@@ -38,7 +52,6 @@ if(localStorage.name != undefined) {
         $("#name").focus();
         $("#name").select();
     }
-
 }
 
 function update() {
@@ -93,11 +106,12 @@ function updateBoard() {
     $.get("gameinfo.php", function(data, status) {
         let str = data + "";
         if(str.charAt(0) == 'l') {
+            state
             if(localStorage.hasSeenDumbResetButtonJoke != true) {
                 gameMessage("Your opponent left the game lol.<br>Reload the page to re-enter the queue.<h6>I'm not going to be the one to implement a restart button lol</h6>", true);
                 setTimeout(() => {
                     gameMessage("<h5>Ok ok ok please stop crying here is a reset button:</h5> <br><button class='button' onclick='reset()'>Re-enter queue</button>", true); 
-                }, 7);
+                }, 7000);
                 localStorage.hasSeenDumbResetButtonJoke = true;
             }
             else gameMessage("<button class='button' onclick='reset()'>Re-enter queue</button>", true);
@@ -119,6 +133,9 @@ function updateBoard() {
                 }
             }
         }
+        // 47 and 52 are the 2 indeces of the taunts
+        if(str[47] != "0" || lTaunt) bubbleMessage(str[47], true);
+        if(str[52] != "0" || rTaunt) bubbleMessage(str[52], false);
     });
 }
 
@@ -240,11 +257,20 @@ function startPlaying(yourTurn) {
     youFirst = yourTurn;
     turn = true;
     state = State.playing;
+
+    //Reset queue bar thing
     let sideInfo = $("#sideinfo");
     sideInfo.empty();
     sideInfo.append("<h2>" + myName + "</h2><hr><h3>Playing against " + opponent + "</h3><div class='queue' id='queue'></div>");
     if(yourTurn) setNames(myName, opponent);
     else setNames(opponent, myName);
+
+    //Add taunts
+    let tauntDiv = $("#taunts");
+    tauntDiv.removeClass("gone");
+    for(let i in taunts) {
+        if(i != 0) tauntDiv.append("<div onclick='sendTaunt("+ i +")'>" + taunts[i] + "</div>");
+    }
 }
 
 function submitName(event) {
@@ -295,13 +321,30 @@ function changeTurnIndicator(turn) {
     else $("#turn").addClass("right");
 }
 
-function bubbleMessage(message, side) {
-    $("#bubble" + side).removeClass("bubble-gone").text(messages[message]);
-    if(messages[message].length < 3) $("#bubble" + side).css("font-size", "xx-large");
+function sendTaunt(index) {
+    $.ajax({
+        type: "POST",
+        url: "taunt.php",
+        data: {taunt: index, name: myName, key: key},
+        success: function(data) {
+            console.log("taunt: ", data);
+            if(data == "yes") bubbleMessage(index, youFirst);
+            if(index != 0) setTimeout(function () {sendTaunt(0)}, 4000);
+        }
+    });
+}
 
-    setTimeout(function() {
-        $("#bubble" + side).css({"font-size" : ""}).addClass("bubble-gone");
-    }, 3000);
+function bubbleMessage(message, side) {
+    let el = $("#bubble" + (side ? 'L' : 'R'));
+    
+    if(message == 0) el.css("font-size", "").addClass("bubble-gone");
+    else {
+        el.removeClass("bubble-gone").text(taunts[message]);
+        if(taunts[message].length < 3) el.css("font-size", "xx-large");
+    }
+    if(side) lTaunt = message != 0;
+    else rTaunt = message != 0;
+    console.log("made it ", !!message);
 }
 
 function gameMessage(message, stay = false) {

@@ -20,6 +20,22 @@
 
 </head>
 <body>
+     <!-- Bar on the right for the queue and shit -->
+     <div class="sidebar">
+        <div id="sideinfo">
+            <form id="nameform" onsubmit="submitName(event)">
+                <h3>Join the queue</h3>
+                Name:
+                <input type="text" name="name" id="name" placeholder="Name">
+                <br><br>
+                <input type="submit" value="Join">
+                <br><br>
+            </form>
+        </div>
+        <div style="overflow:auto" id="message"></div>
+    </div>
+    
+
     <div class="leftBox">
         <div class="board">
             <div class="column" id="c0" onclick="drop(0)">
@@ -63,22 +79,13 @@
         <hr>
         <p id="gameMessage"></p>
     </div>
-    
-    <!-- Bar on the right -->
-    <div class="sidebar">
-        <div id="sideinfo">
-            <form id="nameform" onsubmit="submitName(event)">
-                <h3>Join the queue</h3>
-                Name:
-                <input type="text" name="name" id="name" placeholder="Name">
-                <br><br>
-                <input type="submit" value="Join">
-                <br><br>
-            </form>
-        </div>
-        <div style="overflow:auto" id="message"></div>
-    </div>
 
+   
+    <div class="taunts gone" id="taunts">
+        <h3>Send a nice message to your opponent :)</h3>
+        <br>
+    </div>
+    
     <!-- jQuery is great -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="main.js"></script>

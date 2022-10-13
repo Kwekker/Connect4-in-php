@@ -5,10 +5,13 @@ body {
 }
 
 
-/* RIGHT BOX THINGS */
+/* Right side of screen */
+
+/* Right box for queue */
 .sidebar {
     vertical-align: top;
-    float: right;
+    position: absolute;
+    right: 0px;
     padding: 10px;
     padding-right: 20px;
     border: 2px #777 solid;
@@ -23,9 +26,27 @@ body {
     display: block;
 }
 
+/* Taunts */
+.taunts {
+    width: 400px;
+    border: 2px #777 solid;
+    background-color: #000;
+    display: inline-block;
+    vertical-align: bottom;
+}
 
+.taunts > div {
+    padding: 5px;
+    margin: 6px;
+}
 
-/* LEFT BOX THINGS */
+.taunts > h3 {
+    font-weight: normal;
+    text-align: center;
+}
+
+/* Left side of screen */
+/* Left box under board */
 .leftBox {
     display: inline-block;
     border: 5px solid black;
@@ -172,4 +193,8 @@ body {
     position: relative;
     border-radius: 100%;
     margin: 5px 0;
+}
+
+.gone {
+    display: none;
 }

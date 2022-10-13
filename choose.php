@@ -41,6 +41,7 @@
         file_put_contents("data.txt", "11$opponent", LOCK_EX);
         databaseRemove("queue.txt", $name);
         databaseRemove("queue.txt", $opponent);
+        file_put_contents("taunts.txt", "\n0 0:\n1 0:", LOCK_EX);
 
         //Start the game by resetting the board
         //Pretty sure this is the best way of doing this (it's 7 * 6 = 42 0's)
