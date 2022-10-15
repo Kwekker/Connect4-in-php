@@ -34,14 +34,6 @@ const State = {
 }
 let state = 0;
 
-addEventListener('beforeunload', (event) => {
-    $.ajax({
-        type: "POST",
-        url: "update.php",
-        data: {leave: 1, name: myName, key: key}
-    });
-});
-
 if(localStorage.name != undefined) {
     if(localStorage.instaJoin == true) {
         console.log("instaJoining");
@@ -53,6 +45,18 @@ if(localStorage.name != undefined) {
         $("#name").focus();
         $("#name").select();
     }
+}
+
+window.onbeforeunload = function(){
+    leave();
+ }
+
+function leave() {
+    $.ajax({
+        type: "POST",
+        url: "update.php",
+        data: {leave: 1, name: myName, key: key}
+    });
 }
 
 function update() {
@@ -72,7 +76,11 @@ function update() {
                         startPlaying(false);
                     }
                     else {
-                        if(str.charAt(0) == '1') addButtons = true;
+                        if(str.charAt(0) == '1')  {
+                            addButtons = true;
+                            $("#waiting").text("Choose an opponent:");
+                            $("#chooseMessage").removeClass("gone");
+                        }
                         if(str.charAt(1) == '1') {
                             setNames(str.substring(2, str.indexOf(",")), str.substring(str.indexOf(",") + 1));
                         }
@@ -109,15 +117,16 @@ function updateBoard() {
     $.get("gameinfo.php", function(data, status) {
         let str = data + "";
         if(str.charAt(0) == 'l') {
-            state
-            if(localStorage.hasSeenDumbResetButtonJoke != true) {
+            state = State.done;
+            clearInterval(interval);
+            if(localStorage.hasSeenDumbResetButtonJoke != "true") {
                 gameMessage("Your opponent left the game lol.<br>Reload the page to re-enter the queue.<h6>I'm not going to be the one to implement a restart button lol</h6>", true);
                 setTimeout(() => {
                     gameMessage("<h5>Ok ok ok please stop crying here is a reset button:</h5> <br><button class='button' onclick='reset()'>Re-enter queue</button>", true); 
                 }, 7000);
                 localStorage.hasSeenDumbResetButtonJoke = true;
             }
-            else gameMessage("<button class='button' onclick='reset()'>Re-enter queue</button>", true);
+            else gameMessage("Your opponent left the game lol.<br><button class='button' onclick='reset()'>Re-enter queue</button>", true);
 
 
             return;
@@ -274,6 +283,9 @@ function startPlaying(yourTurn) {
     for(let i in taunts) {
         if(i != 0) tauntDiv.append("<div onclick='sendTaunt("+ i +")'>" + taunts[i] + "</div>");
     }
+
+    //Remove potential choose message
+    $("#chooseMessage").remove()
 }
 
 function submitName(event) {
@@ -312,7 +324,7 @@ function recKey(data) {
 
     console.log($("#sideinfo"));
     $("#sideinfo").empty();
-    $("#sideinfo").append("<h2>" + myName + "</h2><hr><h3>Waiting in queue:</h3><div class='queue' id='queue'></div>");
+    $("#sideinfo").append("<h2>" + myName + "</h2><hr><h3 id='waiting'>Waiting in queue:</h3><div class='queue' id='queue'></div>");
     $("#message").empty();
 
     makeQueue();

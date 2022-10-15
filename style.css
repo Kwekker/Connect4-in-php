@@ -26,6 +26,16 @@ body {
     display: block;
 }
 
+#chooseMessage {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 20px;
+    margin-top: 130px;
+    padding: 8px;
+    border: #777 solid 1px;
+    font-size: x-large;
+}
+
 /* Taunts */
 .taunts {
     width: 400px;
@@ -211,5 +221,47 @@ body {
 }
 
 .gone {
-    display: none;
+    display: none!important;
+}
+
+/* Mobile compatible things */
+@media screen and (max-width: 870px) {
+    .sidebar {
+        position: static;
+        display: block;
+        padding: 5px;
+        margin-bottom: 5px;
+    }
+    .sidebar br { 
+        display: none;
+    }
+    .sidebar input[type=submit] {
+        padding: 5px 10px;
+    }
+
+    .leftBox {
+        border: 0;
+    }
+
+    .board {
+        border: none;
+        resize: none;
+        margin-left: 0;
+    }
+    .board, .sidebar, .taunts {
+        width: 100%;
+        border-left: 0;
+        border-right: 0;
+    }
+
+    #gameInfo {
+        font-size: x-large;
+    }
+    #gameInfo p:empty::after {
+        font-size: x-large;
+    }
+
+    #chooseMessage {
+        display: none;
+    }
 }
