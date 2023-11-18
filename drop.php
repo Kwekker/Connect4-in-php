@@ -2,7 +2,7 @@
     require "lib.php";
     
 
-    if(true || isset($_POST["col"]) && isset($_POST["name"]) && isset($_POST["key"])) {
+    if(isset($_POST["col"]) && isset($_POST["name"]) && isset($_POST["key"])) {
         $col = intval($_POST["col"]);
 
         if($col < 0 || $col > 6) { 
