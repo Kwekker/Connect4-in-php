@@ -5,10 +5,10 @@
         return databaseRead("keys.txt", $name) === $key;
     }
 
-    
+
     function databaseInsert($fileName, $name, $value) {
         $append = "\n$name $value:";
-        
+
         file_put_contents($fileName, $append, FILE_APPEND);
     }
 
@@ -17,7 +17,7 @@
 
         return strpos($file, "\n".$name." ") !== false;
     }
-    
+
     function databaseRead($fileName, $name) {
         $file = file_get_contents($fileName);
 
@@ -25,7 +25,7 @@
         if($startPos === false) return false;
         $startPos += strlen($name) + 2;
         $endPos = strpos($file, ":", $startPos + 1);
-        
+
         return substr($file, $startPos, $endPos - $startPos);
     }
 

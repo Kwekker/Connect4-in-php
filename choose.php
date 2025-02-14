@@ -5,7 +5,7 @@
         echo databaseRead("board.txt", "papa", 3);
     }
 
-    if(isset($_POST['can']) && isset($_POST['name'])) {        
+    if(isset($_POST['can']) && isset($_POST['name'])) {
         $name = $_POST['name'];
         $can = canChoose($name);
 

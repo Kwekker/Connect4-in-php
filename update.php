@@ -7,8 +7,8 @@
         if(!authenticate($name, $_POST['key'])) {
             echo "badkey";
             die;
-        }        
-        
+        }
+
         $timeNow = time();
         if(isset($_POST['leave'])) {
             if(isPlayer($name)) {
@@ -35,8 +35,8 @@
                     $timedOut[$index++] = substr($tok, 1, strpos($tok, " ") - 1);
                 }
                 $tok = strtok(":");
-            } 
-            
+            }
+
             foreach ($timedOut as $name) {
                 if($name === $player0 || $name === $player1) {
                     stopGame();

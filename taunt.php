@@ -9,7 +9,8 @@
         }
 
         $index = 1;
-        if(databaseRead("players.txt", "0") == $_POST['name']) $index = 0;
+        if(databaseRead("players.txt", "0") == $_POST['name'])
+            $index = 0;
         databaseEdit("taunts.txt", $index, $_POST['taunt']);
 
         echo "yes";
