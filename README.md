@@ -3,6 +3,8 @@ This is a personal challenge to create connect 4 purely with javascript and php.
 
 All state is stored in files and player authentication is done using randomly generated hex keys, which isn't very secure.
 I don't really care about the game's security though, because it would be kinda funny if someone hacked into a match.
+When I was making this I didn't know about the wonders of JSON yet, so the files follow my own format, which is really ugly tbh.
+I can't be bothered to change that, however, so that's just how it's going to work.
 
 Features:
 * Only one game can be played at the time.
