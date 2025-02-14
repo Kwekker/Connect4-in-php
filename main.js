@@ -1,15 +1,20 @@
 const colors = ["", "red", "yellow", "green"];
 const taunts = [
-    "This will actually never be displayed in the game lol",
+    "This taunt will actually never be displayed in the game lol",
     "gg",
     "nice",
     "oh..",
     "fuck",
+    "rude",
+    "...",
     "cringe",
     "No.",
     ":)",
+    "why??",
     "oh ok thanks I guess",
     "Stervus Minervus",
+    "Oh wow ok",
+    "please",
 ];
 let myName;
 let opponent;
@@ -25,6 +30,8 @@ let interval;
 
 let lTaunt = false;
 let rTaunt = false;
+
+let nextSendTaunt = undefined;
 
 const State = {
     start: 0,
@@ -47,6 +54,9 @@ if(localStorage.name != undefined) {
     }
 }
 
+// window.addEventListener('beforeunload', (event) => {
+//     leave();
+// });
 window.onbeforeunload = function(){
     leave();
  }
@@ -95,6 +105,18 @@ function update() {
     else {
         console.log("Play update");
         updateBoard();
+
+        // Send taunt when taunt is pressed
+        // Kinda a state machine
+        if (nextSendTaunt == "remove") {
+            sendTaunt(0);
+            nextSendTaunt = undefined;
+            bubbleMessage(0, youFirst);
+        } 
+        else if (nextSendTaunt != undefined) {
+            sendTaunt(nextSendTaunt);
+            nextSendTaunt = "remove";
+        }
     }
 
     $.ajax({
@@ -110,11 +132,15 @@ function update() {
     });
 }
 
+let globalGameInfo = 0;
+let fuck_you;
 
 function updateBoard() {
     //TODO: Don't ask for the board when it's your turn
 
     $.get("gameinfo.php", function(data, status) {
+        console.log("game info:\n" + data);
+        globalGameInfo = data;
         let str = data + "";
         if(str.charAt(0) == 'l') {
             state = State.done;
@@ -145,9 +171,19 @@ function updateBoard() {
                 }
             }
         }
-        // 47 and 52 are the 2 indeces of the taunts
-        if(str[47] != "0" || lTaunt) bubbleMessage(str[47], true);
-        if(str[52] != "0" || rTaunt) bubbleMessage(str[52], false);
+
+        // Handle taunts
+        let splitted = str.split(" ");
+        let lTauntIndex = splitted[1].substring(0, splitted[1].indexOf(":"))
+        let rTauntIndex = splitted[2].substring(0, splitted[2].indexOf(":"))
+        console.log("Values:", lTauntIndex, rTauntIndex, splitted);
+
+        // Send a taunt if: 
+        //  there is a new taunt, 
+        //  or there was already a taunt (thereby setting it to 0),
+        //  on the side the is not yours.
+        if(youFirst == false && (lTaunt || lTauntIndex != "0")) bubbleMessage(lTauntIndex, true);
+        if(youFirst == true  && (rTaunt || rTauntIndex != "0")) bubbleMessage(rTauntIndex, false);
     });
 }
 
@@ -281,7 +317,7 @@ function startPlaying(yourTurn) {
     let tauntDiv = $("#taunts");
     tauntDiv.removeClass("gone");
     for(let i in taunts) {
-        if(i != 0) tauntDiv.append("<div onclick='sendTaunt("+ i +")'>" + taunts[i] + "</div>");
+        if(i != 0) tauntDiv.append("<div onclick='prepareTaunt(" + i + ");'>" + taunts[i] + "</div>");
     }
 
     //Remove potential choose message
@@ -343,15 +379,16 @@ function changeDistinctPiece(x, y) {
     console.log("Setting lap to ", x, y, "so it's now ", lastAddedPiece);
 }
 
+function prepareTaunt(index) {
+    nextSendTaunt = index;
+    bubbleMessage(index, youFirst);
+}
+
 function sendTaunt(index) {
     $.ajax({
         type: "POST",
         url: "taunt.php",
-        data: {taunt: index, name: myName, key: key},
-        success: function(data) {
-            if(data == "yes") bubbleMessage(index, youFirst);
-            if(index != 0) setTimeout(function () {sendTaunt(0)}, 4000);
-        }
+        data: {taunt: index, name: myName, key: key}
     });
 }
 

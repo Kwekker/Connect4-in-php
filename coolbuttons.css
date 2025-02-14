@@ -4,7 +4,7 @@
     --buttonBackground: rgb(9, 48, 164);
 }
 
-.button, .description a, .taunts div{
+.button, .description a{
     display: inline-block;
     font-size: 20px;
     padding: 20px;
@@ -16,7 +16,7 @@
     color: black;
 }
   
-.button:hover, .description a:hover, input[type=range]::-webkit-slider-thumb:hover, .taunts div:hover{
+.button:hover, .description a:hover, input[type=range]::-webkit-slider-thumb:hover{
     background-color: var(--buttonBackground);
     color: white;
     border-style: inset;
